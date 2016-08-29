@@ -6,15 +6,25 @@ var Ajax = {
 	post : function(params) {
 
 		var url = params.url;
-		var data = params.data;
+		var content = params.data;
 		var dataType = params.dataType;
+		
+		if (typeof(params.data) == "object") {
+			content = "";
+			for (var key in params.data) {
+				
+				content += "&" + key + "=" + params.data[key];
+			}
+			content = content.substring(1, content.length - 1);
+//			content = JSON.stringify(params.data);
+//			headerContent = "application/json";
+		}
 
 		var req = Ajax.createXMLHTTPRequest();
 		if (req) {
 			req.open("POST", url, true);
-			req.setRequestHeader("Content-Type",
-					"application/x-www-form-urlencoded; charset=utf-8;");
-			req.send(data);
+			req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8;");
+			req.send(content);
 			req.onreadystatechange = function() {
 				if (req.readyState == 4) {
 					if (req.status == 200) {
@@ -28,7 +38,7 @@ var Ajax = {
 							}
 						}
 					} else {
-
+						
 					}
 				}
 			}
