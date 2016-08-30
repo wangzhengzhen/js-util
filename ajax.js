@@ -15,7 +15,7 @@ var Ajax = {
 				
 				content += "&" + key + "=" + params.data[key];
 			}
-			content = content.substring(1, content.length - 1);
+			content = content.substring(1, content.length);
 //			content = JSON.stringify(params.data);
 //			headerContent = "application/json";
 		}
