@@ -59,8 +59,8 @@ function Validator() {
 			
 			if (! flag) {
 				// 验证不通过
-				result[failIndex] = tmp;
-				if (checkAll) {
+				result[failIndex++] = tmp;
+				if (!checkAll) {
 					break;
 				}
 			}
@@ -100,18 +100,25 @@ Validator.prototype.notIsEmpty = function(val) {
  * 是否是手机号码
  */
 Validator.prototype.isMobileNumber = function(val) {
-	
-	return true;
+	var reg = /^[1][3-8]\d{9}$/;
+	return reg.test(val);
 }
 
 /**
  * 是否是身份证
  */
 Validator.prototype.isIdCard = function(val) {
-	
-	return true;
+	var reg = /^[1-9]\d{5}(19\d{2}|[2-9]\d{3})((0\d)|(1[0-2]))(([0-2]\d)|3[0-1])(\d{4}|\d{3}X)$/i;
+	return reg.test(val);
 }
 
+/**
+ * 是否是邮箱
+ */
+Validator.prototype.isEmail = function(val) {
+	var reg = /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;
+	return reg.test(val);
+}
 
 /**
  * 是否是日期格式
@@ -137,11 +144,20 @@ Validator.prototype.isPureLetter= function(val) {
 }
 
 /**
+ * 验证只能6到12位
+ */
+Validator.prototype.isPwd = function(val) {
+	
+	var reg = /^[\w]{6,12}$/;
+	return reg.test(val);
+}
+
+/**
  * 是否是汉字
  */
 Validator.prototype.isHanzi = function(val) {
 	
-	var reg = new RegExp("^[\\w\\u4E00-\\u9FA5]*$");
+	var reg = new RegExp("^[\\w\\u4E00-\\u9FA5\\w]*$");
 	return reg.test(val);
 }
 
@@ -150,6 +166,25 @@ Validator.prototype.isHanzi = function(val) {
  */
 Validator.prototype.containsHanzi = function(val) {
 	
+	var reg = new RegExp("^[\\w\\u4E00-\\u9FA5\\w]*$");
+	return reg.test(val);
+}
+
+/**
+ * 不包含汉字
+ */
+Validator.prototype.notContainsHanzi = function(val) {
+	
+	var reg = new RegExp("^[\\w\\u4E00-\\u9FA5\\w]*$");
+	return ! reg.test(val);
+}
+/**
+ * 验证只能输入字母、数字、和下划线
+ */
+Validator.prototype.isUser = function(val) {
+	
+	var reg = /^[0-9a-zA-Z\w]*$/;
+	return reg.test(val);
 }
 
 /**
