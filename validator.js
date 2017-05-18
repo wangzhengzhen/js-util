@@ -32,9 +32,11 @@ function Validator() {
 		var checkAll = params.checkAll;
 		// 验证失败后调用的错误方法
 		var failFn = params.failure;
+		var succFn = params.success;
 		
 		var result = new Array();
-		var failIndex = 0;
+		var resultSucc = new Array();
+		var failIndex = 0, succIndex = 0;
 		
 		for (var i = 0, j = fields.length; i < j; i++) {
 			
@@ -44,9 +46,10 @@ function Validator() {
 			var id = tmp.id;
 			var name = tmp.name;
 			var val = tmp.value;
+			var obj = tmp.obj;
 			
 			if (null != id) {
-				val = document.getElementById("id").value;
+				val = document.getElementById(id).value;
 			}
 			
 			var flag;
@@ -57,7 +60,11 @@ function Validator() {
 				flag = rule(ruleParams);
 			}
 			
-			if (! flag) {
+			if (flag && checkAll) {
+				// 只有全部检查时执行
+				resultSucc[resultSucc++] = tmp;
+			}
+			if (!flag) {
 				// 验证不通过
 				result[failIndex++] = tmp;
 				if (!checkAll) {
@@ -71,6 +78,9 @@ function Validator() {
 		}
 
 		if (checkAll) {
+			if (null != succFn && undefined != succFn) {
+				succFn(resultSucc);
+			}
 			failFn(result);
 		} else {
 			failFn(result[0]);
@@ -144,7 +154,16 @@ Validator.prototype.isPureLetter= function(val) {
 }
 
 /**
- * 验证只能6到12位
+ * 验证输入金额只能为数字和带小数点的
+ */
+Validator.prototype.isAmount = function(val) {
+	
+	var reg = /^[0-9]{1,12}([.][0-9]{1,2})?$/;
+	return reg.test(val);
+}
+
+/**
+ * 验证密码只能6到12位
  */
 Validator.prototype.isPwd = function(val) {
 	
@@ -183,7 +202,16 @@ Validator.prototype.notContainsHanzi = function(val) {
  */
 Validator.prototype.isUser = function(val) {
 	
-	var reg = /^[0-9a-zA-Z\w]*$/;
+	var reg = /^([a-zA-Z]){1}[\d\w]{5,19}$/;
+	return reg.test(val);
+}
+
+/**
+ * 验证只能输入六位数字
+ */
+Validator.prototype.sixNumber = function(val) {
+	
+	var reg = /^[0-9]{6}$/;
 	return reg.test(val);
 }
 
